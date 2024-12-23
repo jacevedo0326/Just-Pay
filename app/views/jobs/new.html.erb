@@ -1,0 +1,49 @@
+<h1>New Job</h1>
+
+<%= form_with model: @job do |form| %>
+  <div>
+    <%= form.label :customer_name %>
+    <%= form.text_field :customer_name %>
+  </div>
+
+  <div>
+    <%= form.label :phone_number %>
+    <%= form.telephone_field :phone_number %>
+  </div>
+
+  <div>
+    <%= form.label :address %>
+    <%= form.text_area :address %>
+  </div>
+
+  <div>
+    <%= form.label :date %>
+    <%= form.date_field :date %>
+  </div>
+
+  <div>
+    <%= form.label :status %>
+    <%= form.text_field :status %>
+  </div>
+
+  <h3>Select Services:</h3>
+  <div class="services-list">
+    <% Service.all.each do |service| %>
+      <div class="service-item">
+        <%= check_box_tag "service_ids[]", 
+            service.id, 
+            false %>
+        <%= label_tag "service_#{service.id}", "#{service.name} - $#{service.price}" %>
+        <%= number_field_tag "quantities[#{service.id}]",
+            1,
+            min: 0 %>
+      </div>
+    <% end %>
+  </div>
+
+  <div>
+    <%= form.submit "Create Job" %>
+  </div>
+<% end %>
+
+<%= link_to "Back", jobs_path %>

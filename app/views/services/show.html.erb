@@ -1,0 +1,8 @@
+<h1><%= @service.name %></h1>
+<p>Price: $<%= @service.price %></p>
+
+<div>
+  <%= link_to "Back", services_path %>
+  <%= link_to "Edit", edit_service_path(@service) %>
+  <%= button_to "Delete", @service, method: :delete, data: { turbo_confirm: "Are you sure?" } %>
+</div>

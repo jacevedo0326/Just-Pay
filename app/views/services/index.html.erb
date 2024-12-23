@@ -1,0 +1,14 @@
+<h1>Services</h1>
+
+<%= link_to "New Service", new_service_path %> |
+<%= link_to "Back", jobs_path %>
+
+<div id="services">
+  <% @services.each do |service| %>  
+    <div>   
+      <%= link_to service.name, service %>  
+      <br> <%# This creates a line break %>
+      $<%= service.price %> <%# Added $ sign for price %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,17 @@
+<h1>Jobs</h1>
+
+<%= link_to "New Job", new_job_path %> |
+<%= link_to "Edit Services", services_path %>
+<div id="jobs">
+  <% @jobs.each do |job| %>
+    <div>
+      <%= link_to job.customer_name, job %>
+      <br>
+      Date: <%= job.date %>
+      <br>
+      Status: <%= job.status %>
+      <br>
+      Total: $<%= job.total_price %>
+    </div>
+  <% end %>
+</div>

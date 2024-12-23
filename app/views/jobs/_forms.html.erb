@@ -1,0 +1,34 @@
+<%= form_with model: @job do |form| %>
+  <div>
+    <%= form.label :customer_name %>
+    <%= form.text_field :customer_name %>
+  </div>
+
+  <div>
+    <%= form.label :phone_number %>
+    <%= form.telephone_field :phone_number %>
+  </div>
+
+  <div>
+    <%= form.label :address %>
+    <%= form.text_area :address %>
+  </div>
+
+  <div>
+    <%= form.label :date %>
+    <%= form.date_field :date %>
+  </div>
+
+  <div>
+    <%= form.label :status %>
+    <%= form.text_field :status %>
+  </div>
+
+  <div>
+    <h3>Select Services:</h3>
+    <% Service.all.each do |service| %>
+      <div class="service-selection">
+        <%= check_box_tag "service_ids[]", 
+            service.id, 
+            @job.services.include?(service) %>
+        <%= label_tag "service_#{service.id}", "#{service.name} - $#{service.price}" %>
