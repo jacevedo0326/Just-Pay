@@ -1,5 +1,5 @@
 databases:
-  - name: postgres
+  - name: mysite
     databaseName: mysite
     user: mysite
     plan: free
