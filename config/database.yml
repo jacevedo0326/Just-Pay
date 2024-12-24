@@ -18,5 +18,11 @@ test:
   host: localhost
 
 production:
-  <<: *default
-  url: <%= ENV['DATABASE_URL'] %>
+  primary: &primary_production
+    <<: *default
+    url: <%= ENV['DATABASE_URL'] %>
+  
+  # Add this section for cable
+  cable:
+    <<: *default
+    url: <%= ENV['DATABASE_URL'] %>
