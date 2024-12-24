@@ -1,65 +1,252 @@
-/* Add these styles to your existing CSS */
-
-.export-options {
-margin: 20px 0;
-padding: 15px;
-background: #f5f5f5;
-border-radius: 5px;
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f7fa;
+   }
+   
+   .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+   }
+   
+   h1 {
+    color: #2c3e50;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eee;
+   }
+   
+   /* Form Styles */
+   .form-group {
+    margin-bottom: 20px;
+   }
+   
+   label {
+    display: block;
+    margin-bottom: 5px;
+    color: #2c3e50;
+    font-weight: bold;
+   }
+   
+   input[type="text"],
+   input[type="tel"],
+   input[type="date"],
+   input[type="number"],
+   textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+   }
+   
+   textarea {
+    min-height: 100px;
+   }
+   
+   /* Services Section */
+   .services-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+   }
+   
+   .services-list {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 4px;
+    margin: 20px 0;
+   }
+   
+   .service-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: white;
+    border-radius: 4px;
+   }
+   
+   .service-item input[type="number"] {
+    width: 80px;
+    margin-left: auto;
+   }
+   
+   .service-card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+   }
+   
+   .service-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   }
+   
+   .service-name {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+   }
+   
+   .service-price {
+    color: #27ae60;
+    font-size: 1.1em;
+    font-weight: bold;
+   }
+   
+   /* Buttons */
+   .button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    margin-right: 10px;
+   }
+   
+   .button:hover {
+    background-color: #2980b9;
+   }
+   
+   .button-secondary {
+    background-color: #95a5a6;
+   }
+   
+   .button-secondary:hover {
+    background-color: #7f8c8d;
+   }
+   
+   .button-delete {
+    background-color: #e74c3c;
+   }
+   
+   .button-delete:hover {
+    background-color: #c0392b;
+   }
+   
+   /* Table Styles */
+   table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: white;
+   }
+   
+   th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+   }
+   
+   th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #2c3e50;
+   }
+   
+   tr:hover {
+    background-color: #f8f9fa;
+   }
+   
+   .total-row {
+    font-weight: bold;
+    background-color: #f8f9fa;
+   }
+   
+   /* Export Options */
+   .export-options {
+    margin: 20px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 4px;
+   }
+   
+   .export-options h3 {
+    margin-top: 0;
+    color: #2c3e50;
+   }
+   
+   /* Info Sections */
+   .info-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 4px;
+   }
+   
+   .info-section h2 {
+    margin-top: 0;
+    color: #2c3e50;
+    font-size: 1.2em;
+    margin-bottom: 15px;
+   }
+   
+   .info-group {
+    margin-bottom: 10px;
+   }
+   
+   .info-group strong {
+    color: #2c3e50;
+    margin-right: 10px;
+   }
+   
+   /* Form Actions */
+   .form-actions {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+   }
+   
+   /* Page Headers */
+   .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+   }
+   
+   /* Responsive Design */
+   @media (max-width: 768px) {
+    .container {
+      padding: 15px;
+    }
 }
-
-.button {
-display: inline-block;
-padding: 8px 15px;
-margin: 5px;
-background: #007bff;
-color: white;
-text-decoration: none;
-border-radius: 4px;
-}
-
-.button:hover {
-background: #0056b3;
-}
-
-table {
-width: 100%;
-border-collapse: collapse;
-margin: 20px 0;
-}
-
-th, td {
-padding: 10px;
-border: 1px solid #ddd;
-text-align: left;
-}
-
-th {
-background-color: #f5f5f5;
-}
-
-.service-selection {
-margin: 10px 0;
-padding: 10px;
-border: 1px solid #ddd;
-border-radius: 4px;
-}
-
-.quantity-field {
-width: 60px;
-padding: 5px;
-margin-left: 10px;
-}
-
-.submit-button {
-padding: 10px 20px;
-background: #28a745;
-color: white;
-border: none;
-border-radius: 4px;
-cursor: pointer;
-margin-top: 20px;
-}
-
-.submit-button:hover {
-background: #218838;
-}
+    .service-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+   
+    .service-item input[type="number"] {
+      margin-left: 0;
+      margin-top: 10px;
+    }
+    .button-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+      
+      .button-group .button {
+        margin: 0;
+      }

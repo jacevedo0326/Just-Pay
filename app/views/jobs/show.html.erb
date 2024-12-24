@@ -1,60 +1,86 @@
-<h1>Job Details</h1>
+<div class="container">
+  <h1>Job #<%= @job.id %></h1>
 
-<div>
- <p>
-   <strong>Customer:</strong>
-   <%= @job.customer_name %>
- </p>
+  <div class="info-section">
+    <h2>Customer Information</h2>
+    <div class="info-group">
+      <strong>Customer:</strong>
+      <%= @job.customer_name %>
+    </div>
 
- <p>
-   <strong>Address:</strong>
-   <%= @job.address %>
- </p>
+    <div class="info-group">
+      <strong>Phone:</strong>
+      <%= @job.phone_number %>
+    </div>
 
- <p>
-   <strong>Date:</strong>
-   <%= @job.date %>
- </p>
+    <div class="info-group">
+      <strong>Address:</strong>
+      <%= @job.address %>
+    </div>
+  </div>
 
- <p>
-   <strong>Status:</strong>
-   <%= @job.status %>
- </p>
+  <div class="info-section">
+    <h2>Job Details</h2>
+    <div class="info-group">
+      <strong>Date:</strong>
+      <%= @job.date %>
+    </div>
 
- <h2>Services</h2>
- <table>
-   <tr>
-     <th>Service</th>
-     <th>Quantity</th>
-     <th>Price Each</th>
-     <th>Total</th>
-   </tr>
-   <% @job.job_services.each do |job_service| %>
-     <% if job_service.quantity > 0 %>
-       <tr>
-         <td><%= job_service.service.name %></td>
-         <td><%= job_service.quantity %></td>
-         <td>$<%= job_service.service.price %></td>
-         <td>$<%= job_service.service.price * job_service.quantity %></td>
-       </tr>
-     <% end %>
-   <% end %>
-   <tr>
-     <td colspan="3"><strong>Total:</strong></td>
-     <td><strong>$<%= @job.total_price %></strong></td>
-   </tr>
- </table>
+    <div class="info-group">
+      <strong>Status:</strong>
+      <%= @job.status %>
+    </div>
 
- <div class="export-options">
-   <h3>Export Options:</h3>
-   <%= link_to "Export as PDF", export_pdf_job_path(@job), class: "button" %>
-   <%= link_to "Export as Excel", export_excel_job_path(@job), class: "button" %>
-   <%= link_to "Export as CSV", export_csv_job_path(@job), class: "button" %>
- </div>
+    <% if @job.notes.present? %>
+      <div class="info-group">
+        <strong>Notes:</strong>
+        <p><%= @job.notes %></p>
+      </div>
+    <% end %>
+  </div>
 
- <div>
-   <%= link_to "Edit", edit_job_path(@job) %> |
-   <%= link_to "Back", jobs_path %> |
-   <%= button_to "Delete", @job, method: :delete, data: { confirm: "Are you sure?" } %>
- </div>
+  <div class="services-section">
+    <h2>Services</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Quantity</th>
+          <th>Price Each</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @job.job_services.each do |job_service| %>
+          <% if job_service.quantity > 0 %>
+            <tr>
+              <td><%= job_service.service.name %></td>
+              <td><%= job_service.quantity %></td>
+              <td>$<%= job_service.service.price %></td>
+              <td>$<%= job_service.service.price * job_service.quantity %></td>
+            </tr>
+          <% end %>
+        <% end %>
+        <tr class="total-row">
+          <td colspan="3" class="text-right"><strong>Total:</strong></td>
+          <td><strong>$<%= @job.total_price %></strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="export-options">
+    <h3>Export Options</h3>
+    <%= link_to "Export as PDF", export_pdf_job_path(@job), class: "button" %>
+    <%= link_to "Export as Excel", export_excel_job_path(@job), class: "button" %>
+    <%= link_to "Export as CSV", export_csv_job_path(@job), class: "button" %>
+  </div>
+
+  <div class="form-actions">
+    <%= link_to "Edit", edit_job_path(@job), class: "button" %>
+    <%= link_to "Back", jobs_path, class: "button button-secondary" %>
+    <%= button_to "Delete", @job, method: :delete, 
+        class: "button button-edit",
+        data: { confirm: "Are you sure you want to delete this job?" } %>
+  </div>
 </div>

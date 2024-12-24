@@ -13,12 +13,17 @@
 
   <div>
     <%= form.label :address %>
-    <%= form.text_area :address %>
+    <%= form.text_field :address %>
   </div>
 
   <div>
     <%= form.label :date %>
     <%= form.date_field :date %>
+  </div>
+
+  <div>
+    <%= form.label :notes %>
+    <%= form.text_field :notes %>
   </div>
 
   <div>
@@ -41,9 +46,8 @@
     <% end %>
   </div>
 
-  <div>
-    <%= form.submit "Update Job" %>
+  <div class="button-group">
+    <%= form.submit "Update Job", class: "button button-edit" %>
+    <%= link_to "Back", job_path(@job), class: "button button-edit" %>
   </div>
 <% end %>
-
-<%= link_to "Back", job_path(@job) %>

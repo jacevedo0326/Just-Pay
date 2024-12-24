@@ -246,7 +246,7 @@ class JobsController < ApplicationController
     end
 
     def job_params
-      params.require(:job).permit(:customer_name, :date, :status, :address, :phone_number)
+      params.require(:job).permit(:customer_name, :date, :status, :address, :phone_number, :notes)
     end
 
     def save_services_with_quantities
