@@ -10,19 +10,58 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <%= yield %>
+    <nav class="navbar">
+      <div class="nav-content">
+        <%= link_to "Just Pay", root_path, class: "nav-brand" %>
+        
+        <div class="nav-links">
+          <% if user_signed_in? %>
+            <%= link_to "Jobs", jobs_path %>
+            <%= link_to "Services", services_path %>
+            <% if current_user.company_owner? %>
+              <%= link_to "Manage Workers", company_workers_path if defined?(company_workers_path) %>
+            <% end %>
+            <div class="user-menu">
+              <span>Hello, <%= current_user.email %></span>
+              <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "button button-outline" %>
+            </div>
+          <% else %>
+            <%= link_to "Sign In", new_user_session_path, class: "button" %>
+            <%= link_to "Sign Up", new_user_registration_path, class: "button button-outline" %>
+          <% end %>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container">
+      <% if notice %>
+        <div class="alert alert-success">
+          <%= notice %>
+        </div>
+      <% end %>
+      
+      <% if alert %>
+        <div class="alert alert-danger">
+          <%= alert %>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>&copy; <%= Time.current.year %> Just Pay. All rights reserved.</p>
+      </div>
+    </footer>
   </body>
 </html>

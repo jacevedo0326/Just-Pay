@@ -1,6 +1,6 @@
 <div class="container">
   <%= form_with model: @job do |form| %>
-    <div class="form-section">
+    <div class="form-section info-section">
       <h2>Customer Information</h2>
       <div class="form-group">
         <%= form.label :customer_name %>
@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <div class="form-section">
+    <div class="form-section info-section">
       <h2>Job Details</h2>
       <div class="form-group">
         <%= form.label :date %>
@@ -36,7 +36,7 @@
       </div>
     </div>
 
-    <div class="form-section">
+    <div class="form-section info-section">
       <h2>Services</h2>
       <div class="services-list">
         <% Service.all.each do |service| %>
@@ -54,8 +54,8 @@
     </div>
 
     <div class="form-actions">
-      <%= form.submit class: "button" %>
-      <%= link_to "Back", jobs_path, class: "button button-secondary" %>
+      <%= form.submit "Save Job", class: "blue_button" %>
+      <%= link_to "Back", jobs_path, class: "red_button" %>
     </div>
   <% end %>
 </div>

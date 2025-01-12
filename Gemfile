@@ -69,3 +69,4 @@ gem 'prawn-table'
 # For Excel files
 gem 'caxlsx'
 gem 'caxlsx_rails'
+gem 'devise'

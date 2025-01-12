@@ -71,16 +71,17 @@
 
   <div class="export-options">
     <h3>Export Options</h3>
-    <%= link_to "Export as PDF", export_pdf_job_path(@job), class: "button" %>
-    <%= link_to "Export as Excel", export_excel_job_path(@job), class: "button" %>
-    <%= link_to "Export as CSV", export_csv_job_path(@job), class: "button" %>
+    <%= link_to "Export as PDF", export_pdf_job_path(@job), class: "blue_button" %>
+    <%= link_to "Export as Excel", export_excel_job_path(@job), class: "blue_button" %>
+    <%= link_to "Export as CSV", export_csv_job_path(@job), class: "blue_button" %>
   </div>
 
   <div class="form-actions">
-    <%= link_to "Edit", edit_job_path(@job), class: "button" %>
-    <%= link_to "Back", jobs_path, class: "button button-secondary" %>
-    <%= button_to "Delete", @job, method: :delete, 
-        class: "button button-edit",
+    <%= link_to "Edit", edit_job_path(@job), class: "blue_button" %>
+    <%= link_to "Back", jobs_path, class: "red_button" %>
+    <%= button_to "Delete", @job, 
+        method: :delete, 
+        class: "red_button",
         data: { confirm: "Are you sure you want to delete this job?" } %>
   </div>
 </div>

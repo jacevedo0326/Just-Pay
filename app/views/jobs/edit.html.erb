@@ -1,53 +1,63 @@
 <h1>Edit Job</h1>
 
-<%= form_with model: @job do |form| %>
-  <div>
-    <%= form.label :customer_name %>
-    <%= form.text_field :customer_name %>
-  </div>
-
-  <div>
-    <%= form.label :phone_number %>
-    <%= form.telephone_field :phone_number %>
-  </div>
-
-  <div>
-    <%= form.label :address %>
-    <%= form.text_field :address %>
-  </div>
-
-  <div>
-    <%= form.label :date %>
-    <%= form.date_field :date %>
-  </div>
-
-  <div>
-    <%= form.label :notes %>
-    <%= form.text_field :notes %>
-  </div>
-
-  <div>
-    <%= form.label :status %>
-    <%= form.text_field :status %>
-  </div>
-
-  <h3>Select Services:</h3>
-  <div class="services-list">
-    <% Service.all.each do |service| %>
-      <div class="service-item">
-        <%= check_box_tag "service_ids[]", 
-            service.id, 
-            @job.services.include?(service) %>
-        <%= label_tag "service_#{service.id}", "#{service.name} - $#{service.price}" %>
-        <%= number_field_tag "quantities[#{service.id}]",
-            @job.job_services.find_by(service: service)&.quantity || 0,
-            min: 0 %>
+<div class="container">
+  <%= form_with model: @job do |form| %>
+    <div class="form-section info-section">
+      <h2>Customer Information</h2>
+      <div class="form-group">
+        <%= form.label :customer_name %>
+        <%= form.text_field :customer_name %>
       </div>
-    <% end %>
-  </div>
 
-  <div class="button-group">
-    <%= form.submit "Update Job", class: "button button-edit" %>
-    <%= link_to "Back", job_path(@job), class: "button button-edit" %>
-  </div>
-<% end %>
+      <div class="form-group">
+        <%= form.label :phone_number %>
+        <%= form.telephone_field :phone_number %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :address %>
+        <%= form.text_field :address %>
+      </div>
+    </div>
+
+    <div class="form-section info-section">
+      <h2>Job Details</h2>
+      <div class="form-group">
+        <%= form.label :date %>
+        <%= form.date_field :date %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :notes %>
+        <%= form.text_field :notes %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :status %>
+        <%= form.text_field :status %>
+      </div>
+    </div>
+
+    <div class="form-section info-section">
+      <h2>Services</h2>
+      <div class="services-list">
+        <% Service.all.each do |service| %>
+          <div class="service-item">
+            <%= check_box_tag "service_ids[]", 
+                service.id, 
+                @job.services.include?(service) %>
+            <%= label_tag "service_#{service.id}", "#{service.name} - $#{service.price}" %>
+            <%= number_field_tag "quantities[#{service.id}]",
+                @job.job_services.find_by(service: service)&.quantity || 0,
+                min: 0 %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit "Update Job", class: "blue_button" %>
+      <%= link_to "Back", job_path(@job), class: "red_button" %>
+    </div>
+  <% end %>
+</div>

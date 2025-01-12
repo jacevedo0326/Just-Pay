@@ -1,17 +1,18 @@
 <h1>Jobs</h1>
 
-<%= link_to "New Job", new_job_path %> |
-<%= link_to "Edit Services", services_path %>
-<div id="jobs">
+<div class="button-group">
+  <%= link_to "NEW JOB", new_job_path, class: "blue_button" %> 
+</div>
+
+<div id="jobs" class="jobs-container">
   <% @jobs.each do |job| %>
-    <div>
-      <%= link_to job.customer_name, job %>
-      <br>
-      Date: <%= job.date %>
-      <br>
-      Status: <%= job.status %>
-      <br>
-      Total: $<%= job.total_price %>
+    <div class="job-item">
+      <%= link_to job.customer_name, job, class: "job_button" %>
+      <div class="job-details">
+        <p><strong>Date:</strong> <%= job.date %></p>
+        <p><strong>Status:</strong> <%= job.status %></p>
+        <p><strong>Total:</strong> $<%= job.total_price %></p>
+      </div>
     </div>
   <% end %>
 </div>
