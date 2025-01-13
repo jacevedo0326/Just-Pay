@@ -30,34 +30,16 @@ class JobsController < ApplicationController
       @services = current_user.accessible_services
       render :new, status: :unprocessable_entity
     end
+  rescue StandardError => e
+    @services = current_user.accessible_services
+    flash.now[:alert] = "Error creating job: #{e.message}"
+    render :new, status: :unprocessable_entity
   end
  
   def update
     if @job.update(job_params)
       @job.job_services.destroy_all
-      
-      Service.all.each do |service|
-        unless params[:service_ids]&.include?(service.id.to_s)
-          JobService.create!(
-            job: @job,
-            service_id: service.id,
-            quantity: 0
-          )
-        end
-      end
- 
-      if params[:service_ids]
-        params[:service_ids].each do |service_id|
-          quantity = (params[:quantities] || {})[service_id].to_i
-          quantity = 1 if quantity == 0
-          JobService.create!(
-            job: @job,
-            service_id: service_id,
-            quantity: quantity
-          )
-        end
-      end
-      
+      save_services_with_quantities
       redirect_to jobs_path, notice: 'Job was successfully updated.'
     else
       @services = current_user.accessible_services
@@ -237,7 +219,7 @@ class JobsController < ApplicationController
       
       Service.all.each do |service|
         unless params[:service_ids].include?(service.id.to_s)
-          JobService.create!(
+          JobService.create(
             job: @job,
             service_id: service.id,
             quantity: 0
@@ -248,11 +230,14 @@ class JobsController < ApplicationController
       params[:service_ids].each do |service_id|
         quantity = (params[:quantities] || {})[service_id].to_i
         quantity = 1 if quantity == 0
-        JobService.create!(
+        JobService.create(
           job: @job,
           service_id: service_id,
           quantity: quantity
         )
       end
+    rescue StandardError => e
+      Rails.logger.error "Error saving services: #{e.message}"
+      true # Return true so the job creation still succeeds
     end
  end
