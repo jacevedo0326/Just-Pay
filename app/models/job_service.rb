@@ -1,5 +1,7 @@
+# app/models/job_service.rb
 class JobService < ApplicationRecord
   belongs_to :job
   belongs_to :service
-  belongs_to :added_by, class_name: 'User'
+
+  validates :quantity, presence: true, numericality: { greater_than_or_equal_to: 0 }
 end

@@ -1,25 +1,26 @@
+# app/controllers/jobs_controller.rb
 class JobsController < ApplicationController
   include ActionView::Helpers::NumberHelper
   require 'csv'
   before_action :authenticate_user!
   before_action :set_job, only: %i[show edit update destroy export_pdf export_excel export_csv]
- 
+
   def index
     @jobs = current_user.accessible_jobs
   end
- 
+
   def show
   end
- 
+
   def new
     @job = Job.new
     @services = current_user.accessible_services
   end
- 
+
   def edit
     @services = current_user.accessible_services
   end
- 
+
   def create
     @job = current_user.jobs.build(job_params)
     
@@ -35,10 +36,9 @@ class JobsController < ApplicationController
     flash.now[:alert] = "Error creating job: #{e.message}"
     render :new, status: :unprocessable_entity
   end
- 
+
   def update
     if @job.update(job_params)
-      @job.job_services.destroy_all
       save_services_with_quantities
       redirect_to jobs_path, notice: 'Job was successfully updated.'
     else
@@ -46,13 +46,13 @@ class JobsController < ApplicationController
       render :edit, status: :unprocessable_entity
     end
   end
- 
+
   def destroy
     @job.job_services.destroy_all
     @job.destroy
     redirect_to jobs_path, notice: 'Job was successfully deleted.'
   end
- 
+
   def export_pdf
     pdf = Prawn::Document.new(margin: 50)
     
@@ -61,7 +61,7 @@ class JobsController < ApplicationController
     pdf.text customer_info, size: 24, style: :bold
     pdf.text "Date: #{@job.date.strftime('%B %d, %Y')}"
     pdf.move_down 20
- 
+
     pdf.text "Bill To:"
     pdf.text @job.customer_name
     if @job.phone_number.present?
@@ -71,7 +71,7 @@ class JobsController < ApplicationController
       pdf.text "Address: #{@job.address}"
     end
     pdf.move_down 20
- 
+
     items = @job.job_services.select { |js| js.quantity > 0 }.map do |job_service|
       [
         job_service.service.name,
@@ -80,7 +80,7 @@ class JobsController < ApplicationController
         number_to_currency(job_service.service.price * job_service.quantity)
       ]
     end
- 
+
     pdf.table([['Service', 'Quantity', 'Price', 'Total']] + items) do |table|
       table.row(0).background_color = 'CCCCCC'
       table.row(0).font_style = :bold
@@ -91,33 +91,33 @@ class JobsController < ApplicationController
         borders: [:top, :bottom, :left, :right]
       }
     end
- 
+
     pdf.move_down 20
     pdf.text "Total Amount Due: #{number_to_currency(@job.total_price)}", 
       style: :bold,
       align: :right,
       size: 12
- 
+
     pdf.move_down 40
     pdf.text "Thank you for your business!", 
       align: :center,
       size: 12
- 
+
     filename_parts = ["Invoice"]
     filename_parts << @job.customer_name.gsub(/\s+/, '_')
     filename_parts << @job.phone_number.gsub(/\D/, '') if @job.phone_number.present?
     filename_parts << @job.id.to_s
- 
+
     send_data pdf.render,
       filename: "#{filename_parts.join('_')}.pdf",
       type: 'application/pdf',
       disposition: 'attachment'
   end
- 
+
   def export_excel
     p = Axlsx::Package.new
     wb = p.workbook
- 
+
     wb.add_worksheet(name: "Invoice #{@job.id}") do |sheet|
       title = "Invoice ##{@job.id} - #{@job.customer_name}"
       title += " - #{@job.phone_number}" if @job.phone_number.present?
@@ -151,18 +151,18 @@ class JobsController < ApplicationController
       sheet.add_row []
       sheet.add_row ["Thank you for your business!"]
     end
- 
+
     filename = ["Invoice"]
     filename << @job.customer_name.gsub(/\s+/, '_')
     filename << @job.phone_number.gsub(/\D/, '') if @job.phone_number.present?
     filename << @job.id.to_s
- 
+
     send_data p.to_stream.read,
       filename: "#{filename.join('_')}.xlsx",
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       disposition: 'attachment'
   end
- 
+
   def export_csv
     csv_data = CSV.generate do |csv|
       header = "Invoice ##{@job.id} - #{@job.customer_name}"
@@ -187,57 +187,51 @@ class JobsController < ApplicationController
           job_service.service.price * job_service.quantity
         ]
       end
- 
+
       csv << []
       csv << ['Total Amount Due:', '', '', @job.total_price]
       csv << []
       csv << ["Thank you for your business!"]
     end
- 
+
     filename = ["Invoice"]
     filename << @job.customer_name.gsub(/\s+/, '_')
     filename << @job.phone_number.gsub(/\D/, '') if @job.phone_number.present?
     filename << @job.id.to_s
- 
+
     send_data csv_data,
       filename: "#{filename.join('_')}.csv",
       type: 'text/csv',
       disposition: 'attachment'
   end
- 
+
   private
     def set_job
       @job = current_user.accessible_jobs.find(params[:id])
     end
- 
+
     def job_params
       params.require(:job).permit(:customer_name, :date, :status, :address, :phone_number, :notes)
     end
- 
+
     def save_services_with_quantities
       return unless params[:service_ids]
       
-      Service.all.each do |service|
-        unless params[:service_ids].include?(service.id.to_s)
-          JobService.create(
-            job: @job,
-            service_id: service.id,
-            quantity: 0
-          )
-        end
-      end
- 
+      # Clear existing job services first
+      @job.job_services.destroy_all
+      
+      # Only create job services for selected services
       params[:service_ids].each do |service_id|
         quantity = (params[:quantities] || {})[service_id].to_i
         quantity = 1 if quantity == 0
-        JobService.create(
+        
+        JobService.create!(
           job: @job,
           service_id: service_id,
           quantity: quantity
         )
       end
     rescue StandardError => e
-      Rails.logger.error "Error saving services: #{e.message}"
-      true # Return true so the job creation still succeeds
+      Rails.logger.error "Failed to save services: #{e.message}"
     end
- end
+end
