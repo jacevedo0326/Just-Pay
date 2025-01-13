@@ -3,17 +3,17 @@ class AddUserToJobs < ActiveRecord::Migration[7.0]
     # First add the column allowing null
     add_reference :jobs, :user, null: true, foreign_key: true
 
-    # Create a default admin user if none exists
+    # Create a default company owner if none exists
     reversible do |dir|
       dir.up do
-        admin = User.create!(
+        company_owner = User.create!(
           email: 'admin@example.com',
           password: 'password123',
-          role: 'admin'
+          role: 'company_owner'  # Changed from 'admin' to 'company_owner'
         )
 
-        # Assign all existing jobs to the admin user
-        Job.update_all(user_id: admin.id)
+        # Assign all existing jobs to the company owner
+        Job.update_all(user_id: company_owner.id, company_owner_id: company_owner.id)  # Added company_owner_id
       end
     end
 

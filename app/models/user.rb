@@ -9,8 +9,8 @@ class User < ApplicationRecord
 
   ROLES = %w[company_owner worker].freeze
 
-  validates :company_owner, presence: true, unless: :company_owner?
-  validates :role, inclusion: { in: ROLES }
+  validates :role, inclusion: { in: ROLES }, on: :create
+  validates :company_owner, presence: true, unless: :company_owner?, on: :create
 
   def company_owner?
     role == 'company_owner'
