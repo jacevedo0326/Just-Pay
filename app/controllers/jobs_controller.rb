@@ -23,7 +23,9 @@ class JobsController < ApplicationController
 
   def create
     @job = current_user.jobs.build(job_params)
-    
+    @job.added_by = current_user  # Add this line
+    @job.last_modified_by = current_user  # Add this line too
+      
     if @job.save
       save_services_with_quantities
       redirect_to jobs_path, notice: 'Job was successfully created.'
@@ -31,13 +33,11 @@ class JobsController < ApplicationController
       @services = current_user.accessible_services
       render :new, status: :unprocessable_entity
     end
-  rescue StandardError => e
-    @services = current_user.accessible_services
-    flash.now[:alert] = "Error creating job: #{e.message}"
-    render :new, status: :unprocessable_entity
   end
-
+  
   def update
+    @job.last_modified_by = current_user  # Add this line
+    
     if @job.update(job_params)
       save_services_with_quantities
       redirect_to jobs_path, notice: 'Job was successfully updated.'

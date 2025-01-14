@@ -39,6 +39,21 @@
     <% end %>
   </div>
 
+  <div class="info-section">
+    <h2>Worker Activity</h2>
+    <div class="info-group">
+      <strong>Created By:</strong>
+      <%= @job.added_by&.email || "Unknown" %> (<%= time_ago_in_words(@job.created_at) %> ago)
+    </div>
+
+    <% if @job.last_modified_by.present? && @job.last_modified_by != @job.added_by %>
+      <div class="info-group">
+        <strong>Last Modified By:</strong>
+        <%= @job.last_modified_by.email %> (<%= time_ago_in_words(@job.updated_at) %> ago)
+      </div>
+    <% end %>
+  </div>
+
   <div class="services-section">
     <h2>Services</h2>
     <table>

@@ -1,7 +1,8 @@
-# app/models/job.rb
 class Job < ApplicationRecord
-  belongs_to :user  # The worker who created the job
+  belongs_to :user
   belongs_to :company_owner, class_name: 'User'
+  belongs_to :added_by, class_name: 'User'
+  belongs_to :last_modified_by, class_name: 'User', optional: true
   has_many :job_services, dependent: :destroy
   has_many :services, through: :job_services
 
@@ -9,6 +10,7 @@ class Job < ApplicationRecord
   validates :date, presence: true
   validates :status, presence: true
   validates :user, presence: true
+  validates :added_by, presence: true
 
   before_validation :set_company_owner, on: :create
 

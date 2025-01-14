@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_14_141906) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_14_144040) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -35,6 +35,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_141906) do
     t.string "notes"
     t.bigint "user_id", null: false
     t.bigint "company_owner_id"
+    t.bigint "added_by_id"
+    t.integer "last_modified_by_id"
+    t.index ["added_by_id"], name: "index_jobs_on_added_by_id"
     t.index ["company_owner_id"], name: "index_jobs_on_company_owner_id"
     t.index ["user_id"], name: "index_jobs_on_user_id"
   end
@@ -87,7 +90,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_141906) do
   add_foreign_key "job_services", "jobs"
   add_foreign_key "job_services", "services"
   add_foreign_key "jobs", "users"
+  add_foreign_key "jobs", "users", column: "added_by_id"
   add_foreign_key "jobs", "users", column: "company_owner_id"
+  add_foreign_key "jobs", "users", column: "last_modified_by_id"
   add_foreign_key "services", "users"
   add_foreign_key "services", "users", column: "company_owner_id"
   add_foreign_key "users", "users", column: "company_owner_id"
