@@ -9,14 +9,12 @@ Rails.application.routes.draw do
   end
 
   namespace :company do
-    get "workers/index"
-    get "workers/show"
-    get "workers/edit"
-    get "workers/update"
-    get "workers/destroy"
     resources :workers, only: [:index, :show, :edit, :update, :destroy] do
       member do
         patch 'change_role'
+        post 'approve_request'
+        post 'reject_request'
+        delete 'remove'
       end
     end
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_13_164950) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_14_141906) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -67,9 +67,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_13_164950) do
     t.datetime "updated_at", null: false
     t.string "role", default: "user"
     t.bigint "company_owner_id"
+    t.string "company_code"
+    t.index ["company_code"], name: "index_users_on_company_code", unique: true
     t.index ["company_owner_id"], name: "index_users_on_company_owner_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "worker_requests", force: :cascade do |t|
+    t.bigint "worker_id"
+    t.bigint "company_owner_id"
+    t.string "status", default: "pending"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_owner_id"], name: "index_worker_requests_on_company_owner_id"
+    t.index ["worker_id"], name: "index_worker_requests_on_worker_id"
   end
 
   add_foreign_key "job_services", "jobs"
@@ -79,4 +91,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_13_164950) do
   add_foreign_key "services", "users"
   add_foreign_key "services", "users", column: "company_owner_id"
   add_foreign_key "users", "users", column: "company_owner_id"
+  add_foreign_key "worker_requests", "users", column: "company_owner_id"
+  add_foreign_key "worker_requests", "users", column: "worker_id"
 end

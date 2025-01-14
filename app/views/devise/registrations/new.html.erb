@@ -12,13 +12,24 @@
 
       <div class="form-group">
         <%= f.label :role %>
-        <%= f.select :role, User::ROLES, { prompt: "Select your role" }, class: "select-input" %>
+        <%= f.select :role, User::ROLES, 
+            { prompt: "Select your role" }, 
+            { onchange: "toggleCompanyCode(this.value)" } %>
+      </div>
+
+      <div id="company-code-field" class="form-group" style="display: none;">
+        <%= label_tag :joining_company_code, "Company Code" %>
+        <%= text_field_tag :joining_company_code, params[:joining_company_code], 
+            maxlength: 6, 
+            class: 'form-control',
+            style: 'text-transform: uppercase;' %>
+        <small class="help-text">Enter the code provided by your company owner</small>
       </div>
 
       <div class="form-group">
         <%= f.label :password %>
         <% if @minimum_password_length %>
-          <span class="help-text">(<%= @minimum_password_length %> characters minimum)</span>
+          <small class="help-text">(<%= @minimum_password_length %> characters minimum)</small>
         <% end %>
         <%= f.password_field :password, autocomplete: "new-password" %>
       </div>
@@ -33,8 +44,25 @@
       </div>
     <% end %>
 
-    <div class="auth-links">
-      <%= render "devise/shared/links" %>
-    </div>
+    <%= render "devise/shared/links" %>
   </div>
 </div>
+
+<script>
+function toggleCompanyCode(role) {
+  const companyCodeField = document.getElementById('company-code-field');
+  if (role === 'worker') {
+    companyCodeField.style.display = 'block';
+  } else {
+    companyCodeField.style.display = 'none';
+  }
+}
+
+// Call on page load to handle initial state
+document.addEventListener('DOMContentLoaded', function() {
+  const roleSelect = document.querySelector('select[name="user[role]"]');
+  if (roleSelect) {
+    toggleCompanyCode(roleSelect.value);
+  }
+});
+</script>

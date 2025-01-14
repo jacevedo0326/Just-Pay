@@ -1,2 +1,32 @@
-<h1>Company::Workers#show</h1>
-<p>Find me in app/views/company/workers/show.html.erb</p>
+<div class="container">
+  <div class="page-header">
+    <h1>Worker Details</h1>
+    <%= link_to 'Back to Workers', company_workers_path, class: 'button button-outline' %>
+  </div>
+
+  <div class="worker-details">
+    <div class="info-card">
+      <div class="info-row">
+        <label>Email:</label>
+        <p><%= @worker.email %></p>
+      </div>
+      <div class="info-row">
+        <label>Role:</label>
+        <p><%= @worker.role %></p>
+      </div>
+      <div class="info-row">
+        <label>Joined:</label>
+        <p><%= @worker.created_at.strftime('%B %d, %Y') %></p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <%= link_to 'Edit', edit_company_worker_path(@worker), class: 'button' %>
+      <%= button_to 'Remove Worker', 
+          remove_company_worker_path(@worker), 
+          method: :delete, 
+          class: 'button button-danger',
+          data: { turbo_confirm: 'Are you sure you want to remove this worker?' } %>
+    </div>
+  </div>
+</div>
