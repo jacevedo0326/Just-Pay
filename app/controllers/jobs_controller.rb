@@ -1,4 +1,3 @@
-# app/controllers/jobs_controller.rb
 class JobsController < ApplicationController
   include ActionView::Helpers::NumberHelper
   require 'csv'
@@ -18,14 +17,14 @@ class JobsController < ApplicationController
   end
 
   def edit
-    @services = current_user.accessible_services
+    @services = @job.company_owner.services
   end
 
   def create
     @job = current_user.jobs.build(job_params)
-    @job.added_by = current_user  # Add this line
-    @job.last_modified_by = current_user  # Add this line too
-      
+    @job.added_by = current_user
+    @job.last_modified_by = current_user
+    
     if @job.save
       save_services_with_quantities
       redirect_to jobs_path, notice: 'Job was successfully created.'
@@ -34,15 +33,15 @@ class JobsController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
-  
+
   def update
-    @job.last_modified_by = current_user  # Add this line
+    @job.last_modified_by = current_user
     
     if @job.update(job_params)
       save_services_with_quantities
       redirect_to jobs_path, notice: 'Job was successfully updated.'
     else
-      @services = current_user.accessible_services
+      @services = @job.company_owner.services
       render :edit, status: :unprocessable_entity
     end
   end
@@ -217,13 +216,16 @@ class JobsController < ApplicationController
     def save_services_with_quantities
       return unless params[:service_ids]
       
-      # Clear existing job services first
+      # Clear existing job services
       @job.job_services.destroy_all
       
-      # Only create job services for selected services
-      params[:service_ids].each do |service_id|
-        quantity = (params[:quantities] || {})[service_id].to_i
-        quantity = 1 if quantity == 0
+      # Only allow services from the job's company owner
+      allowed_service_ids = @job.company_owner.services.pluck(:id).map(&:to_s)
+      selected_service_ids = params[:service_ids] & allowed_service_ids
+      
+      selected_service_ids.each do |service_id|
+        quantity = params[:quantities][service_id].to_i
+        quantity = 1 if quantity < 1
         
         JobService.create!(
           job: @job,
@@ -231,7 +233,5 @@ class JobsController < ApplicationController
           quantity: quantity
         )
       end
-    rescue StandardError => e
-      Rails.logger.error "Failed to save services: #{e.message}"
     end
 end

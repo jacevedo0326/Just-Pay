@@ -21,7 +21,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
           # Remove company_owner until request is approved
           resource.update_column(:company_owner_id, nil)
           
-          set_flash_message! :notice, "Signed up successfully. Waiting for company owner approval."
+          # Changed to use flash directly instead of devise translation
+          flash[:notice] = "Signed up successfully. Waiting for company owner approval."
           sign_up(resource_name, resource)
           respond_with resource, location: after_sign_up_path_for(resource)
         else

@@ -34,22 +34,33 @@
 
       <div class="form-group">
         <%= form.label :status %>
-        <%= form.text_field :status %>
+        <%= form.select :status, ['pending', 'in_progress', 'completed', 'cancelled'], { prompt: 'Select status' } %>
       </div>
     </div>
 
     <div class="form-section info-section">
       <h2>Services</h2>
       <div class="services-list">
-        <% Service.all.each do |service| %>
+        <% @services.each do |service| %>
           <div class="service-item">
-            <%= check_box_tag "service_ids[]", 
-                service.id, 
-                @job.services.include?(service) %>
-            <%= label_tag "service_#{service.id}", "#{service.name} - $#{service.price}" %>
-            <%= number_field_tag "quantities[#{service.id}]",
-                @job.job_services.find_by(service: service)&.quantity || 0,
-                min: 0 %>
+            <div class="service-info">
+              <%= check_box_tag "service_ids[]", 
+                  service.id, 
+                  @job.services.include?(service),
+                  id: "service_checkbox_#{service.id}",
+                  class: 'service-checkbox',
+                  onchange: "toggleQuantity(#{service.id})" %>
+              <%= label_tag "service_checkbox_#{service.id}", 
+                  "#{service.name} - $#{number_to_currency(service.price)}" %>
+            </div>
+            <div class="quantity-wrapper">
+              <%= number_field_tag "quantities[#{service.id}]",
+                  @job.job_services.find_by(service: service)&.quantity || 1,
+                  min: 1,
+                  class: 'quantity-field',
+                  id: "quantity_#{service.id}",
+                  disabled: !@job.services.include?(service) %>
+            </div>
           </div>
         <% end %>
       </div>
@@ -61,3 +72,25 @@
     </div>
   <% end %>
 </div>
+
+<% content_for :head do %>
+  <script>
+    function toggleQuantity(serviceId) {
+      const checkbox = document.getElementById(`service_checkbox_${serviceId}`);
+      const quantityField = document.getElementById(`quantity_${serviceId}`);
+      
+      quantityField.disabled = !checkbox.checked;
+      if (!checkbox.checked) {
+        quantityField.value = "1";
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.service-checkbox').forEach(function(checkbox) {
+        const serviceId = checkbox.value;
+        const quantityField = document.getElementById(`quantity_${serviceId}`);
+        quantityField.disabled = !checkbox.checked;
+      });
+    });
+  </script>
+<% end %>
